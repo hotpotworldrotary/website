@@ -44,16 +44,20 @@ In order:
 
 1. The visitor gets in a car. Directions, hours and phone are the conversion.
 2. The visitor understands the format well enough not to be put off.
-3. The visitor orders delivery through Uber Eats.
+3. The visitor calls. There is no delivery or take-out (house rules: no take-out;
+   delivery links removed at the restaurant's request, 2026-09-28).
 
 The site is not a booking system and there is no reservation flow. Phone is how
 large parties are handled.
 
 ## Breadth beyond hot pot
 
-The kitchen also makes banh mi, pho, pad thai, fried rice and teriyaki to
-order. This matters because it answers the objection "not everyone in my group
-wants to cook their own dinner."
+BBQ is the other half of the offer and sits alongside hot pot at the same price:
+BBQ meats (15 cuts, plain and marinated) are ordered from the server two at a
+time. The site must give it equal weight to hot pot. The old kitchen dishes (banh
+mi, pho, pad thai, fried rice, teriyaki) are not on the 2026 menu and were
+removed from the site at the restaurant's request on 2026-09-28. Do not bring
+them back.
 
 ## Broths
 

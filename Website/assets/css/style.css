@@ -446,16 +446,31 @@ h3 > .vn { font-size: .82rem; }
   isolation: isolate;
 }
 .hero__media { position: absolute; inset: 0; z-index: -2; }
-.hero__media img { width: 100%; height: 100%; object-fit: cover; object-position: center 62%; }
+.hero__media img { width: 100%; height: 100%; object-fit: cover; object-position: center 62%;
+  filter: brightness(1.3) saturate(1.1); }   /* the room photo is dim; lifted rather than shaded */
+/* The photo stays at full brightness (the restaurant asked for no dark shade over it).
+   Legibility comes from a panel behind the copy instead, plus a short fade at the
+   very bottom into the fact bar. */
 .hero::after {
   content: "";
   position: absolute; inset: 0;
   z-index: -1;
-  background:
-    linear-gradient(to top, var(--void) 4%, rgba(14,13,12,.72) 38%, rgba(14,13,12,.28) 70%, rgba(14,13,12,.55) 100%),
-    linear-gradient(to right, rgba(14,13,12,.78) 0%, rgba(14,13,12,.28) 58%, transparent 100%);
+  background: linear-gradient(to top, rgba(14,13,12,.6) 0%, transparent 30%);
 }
 .hero__inner { position: relative; width: 100%; }
+.hero__inner > * { position: relative; }
+.hero__inner::before {
+  content: "";
+  position: absolute;
+  left: -2rem; top: -1.75rem; bottom: -1.75rem;
+  width: min(820px, calc(100% + 4rem));
+  background: rgba(14,13,12,.78);
+  border-radius: 18px;
+  backdrop-filter: blur(4px);
+}
+@media (max-width: 700px) {
+  .hero__inner::before { left: -1rem; width: calc(100% + 2rem); border-radius: 14px; }
+}
 .hero h1 {
   max-width: 28ch;
   margin-bottom: .45em;
@@ -463,6 +478,34 @@ h3 > .vn { font-size: .82rem; }
 }
 .hero .lede { max-width: 44ch; color: var(--bone); }
 .hero .lede b { color: var(--bone); }
+/* Seniors & military decal: a round sticker, tilted like one stuck on the window.
+   Sits on the hero panel's top right corner; inline in the menu section. */
+.decal {
+  position: absolute; right: -1rem; top: -3.5rem;
+  display: grid; place-content: center; text-align: center;
+  width: 8.5rem; aspect-ratio: 1; margin: 0;
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;
+  border: 3px dashed rgba(255,255,255,.75);
+  outline: 5px solid var(--red);
+  box-shadow: 0 10px 30px -8px rgba(0,0,0,.6);
+  transform: rotate(-10deg);
+  line-height: 1.05;
+}
+.decal__big { font-size: 1.9rem; font-weight: 800; letter-spacing: -.02em; }
+.decal__small { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin-top: .3rem; }
+.hero__inner > .decal { position: absolute; left: min(760px, calc(100% - 6rem)); right: auto; }
+@media (max-width: 700px) {
+  .hero__inner > .decal { left: auto; right: 1.25rem; top: -5.25rem; width: 6.5rem; }
+  .hero__inner > .decal .decal__big { font-size: 1.45rem; }
+  .hero__inner > .decal .decal__small { font-size: .6rem; }
+}
+.decal--inline { position: relative; right: auto; top: auto; flex: none; width: 7rem; }
+.decal--inline .decal__big { font-size: 1.55rem; }
+.decal--inline .decal__small { font-size: .62rem; }
+.price-notes { display: flex; align-items: center; gap: 1.75rem; margin-top: 2rem; }
+.price-notes .form__note { margin: 0; }
 
 /* Utility strip under the hero. Real information, not a trust micro-strip:
    the three things a hungry person actually needs before they get in a car. */
@@ -564,13 +607,41 @@ h3 > .vn { font-size: .82rem; }
    into column one and stretches the numeral track to its own max-content,
    which crushed the title into a 53px column on a phone. */
 .step__num { grid-column: 1; grid-row: 1; }
-.step h3 { grid-column: 2; margin-bottom: .4rem; }
+.step h3, .step h4 { grid-column: 2; margin-bottom: .4rem; font-size: 1.2rem; }
 .step p  { grid-column: 2; color: var(--bone-dim); max-width: 60ch; margin-bottom: 0; }
-@media (min-width: 900px) {
-  .step { grid-template-columns: auto 20ch 1fr; align-items: center; }
-  .step h3 { grid-column: 2; margin-bottom: 0; }
-  .step p  { grid-column: 3; }
+
+/* Hot pot and BBQ side by side: two tracks of three steps each. */
+.tracks { display: grid; gap: clamp(2.5rem, 5vw, 4rem); grid-template-columns: 1fr; }
+@media (min-width: 960px) { .tracks { grid-template-columns: 1fr 1fr; } }
+.track__title {
+  padding-bottom: .65rem;
+  margin-bottom: 0;
+  border-bottom: 2px solid var(--red);
+  font-size: clamp(1.3rem, 2.4vw, 1.6rem);
 }
+.track__title .vn { display: inline; margin-left: .5rem; font-size: .8em; }
+.track .steps { border-top: 0; }
+.track .step .step__num { font-size: clamp(2.2rem, 4.5vw, 3.2rem); }
+/* Half-width tracks: always number | title over text, never the three-column row. */
+.track .step { grid-template-columns: auto 1fr; grid-template-rows: auto 1fr; align-items: start; column-gap: 1.5rem; row-gap: 0; padding-block: 1.5rem; }
+.track .step__num { grid-row: 1 / span 2; }
+.track .step h4 { grid-column: 2; grid-row: 1; margin-bottom: .35rem; }
+.track .step p  { grid-column: 2; grid-row: 2; }
+
+.rules {
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  padding: clamp(1.25rem, 3vw, 1.75rem) clamp(1.25rem, 3vw, 2rem);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--red);
+  border-radius: var(--r);
+  background: var(--surface-2);
+}
+.rules h3 {
+  margin-bottom: .6rem;
+  font-size: .8rem; font-weight: 600; letter-spacing: .15em; text-transform: uppercase;
+}
+.rules ul { margin: 0; padding-left: 1.1rem; color: var(--bone-dim); }
+.rules li + li { margin-top: .3rem; }
 
 /* --- broths ------------------------------------------------------------- */
 /* Nine broths grouped by where they come from. Three clusters, sparse rules,
@@ -594,6 +665,35 @@ h3 > .vn { font-size: .82rem; }
 .broth-group b { display: block; font-weight: 600; font-size: 1.08rem; }
 .broth-group .vn { font-size: .92rem; margin-top: .05em; }
 .broth-group small { display: block; margin-top: .2rem; color: var(--bone-dim); font-size: .88rem; }
+
+/* --- drinks list: name, price, what is in it ---------------------------- */
+.drinks { list-style: none; margin: 1.25rem 0 0; padding: 0; }
+.drinks li {
+  display: grid; grid-template-columns: 1fr auto; column-gap: 1rem;
+  padding-block: .75rem; border-bottom: 1px solid var(--line-soft);
+}
+.drinks li:last-child { border-bottom: 0; }
+.drinks b { font-weight: 600; }
+.drinks span { font-weight: 700; color: var(--red-ink); }
+.drinks small { grid-column: 1 / -1; margin-top: .2rem; color: var(--bone-dim); font-size: .9rem; }
+
+/* --- from our menu: small tiles cut from the printed menu --------------- */
+/* Kept small on purpose: the source is a 1080px menu scan. */
+.menu-shots__title {
+  margin: clamp(2.5rem, 5vw, 3.5rem) 0 1rem;
+  font-size: .8rem; font-weight: 600; letter-spacing: .15em; text-transform: uppercase;
+}
+.menu-shots {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+@media (min-width: 1100px) { .menu-shots { grid-template-columns: repeat(7, 1fr); } }
+.menu-shots img {
+  display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover;
+  border-radius: var(--r-sm); border: 1px solid var(--line);
+}
+.menu-shots span { display: block; margin-top: .45rem; font-size: .88rem; font-weight: 600; }
 
 /* --- menu: the printed pages ------------------------------------------- */
 .menu-pages { display: grid; gap: clamp(1rem, 2.5vw, 2rem); margin-bottom: 1.75rem; }
@@ -624,12 +724,14 @@ h3 > .vn { font-size: .82rem; }
   transition: transform .5s var(--ease);
 }
 .gallery a:hover img { transform: scale(1.06); }
-/* Two cells earn double width so the grid has rhythm instead of repetition. */
+/* Five photos on four columns: 2+1+1 on top, 2+2 below. */
 @media (min-width: 760px) {
   .gallery a:nth-child(1),
-  .gallery a:nth-child(6) { grid-column: span 2; }
+  .gallery a:nth-child(4),
+  .gallery a:nth-child(5) { grid-column: span 2; }
   .gallery a:nth-child(1) img,
-  .gallery a:nth-child(6) img { aspect-ratio: 8 / 3; }
+  .gallery a:nth-child(4) img,
+  .gallery a:nth-child(5) img { aspect-ratio: 8 / 3; }
 }
 
 /* --- proof: awards, press, quotes --------------------------------------- */
