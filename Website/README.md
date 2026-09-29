@@ -114,10 +114,10 @@ the restaurant's listing on restaurantguru.com.
 
 ## Open items before launch
 
-1. **Form endpoint.** `contact.html` posts to `https://formspree.io/f/YOUR_FORM_ID`.
-   Create a free Formspree form pointed at hotpotworld@gmail.com and replace that
-   ID. Until then the form does not deliver. If the site lands on Netlify, use
-   Netlify Forms instead (instructions are in the HTML comment above the form).
+1. **Contact form.** Removed 2026-09-28 at the restaurant's request (phone is the
+   channel). It had posted to a placeholder Formspree ID and delivered nothing.
+   To restore: take the `<form>` from commit 519ce64 and give it a real Formspree
+   ID pointed at hotpotworld@gmail.com.
 2. **Menu.** Done 2026-08-20. The `#menu` section shows the printed 11x14 menu
    as two page images (`assets/menu/menu-page-{1,2}.jpg` + `@2x`) with the PDFs
    alongside for download. Source PDFs: `source/originals/menu-2026/`. To update:

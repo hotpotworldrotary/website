@@ -511,59 +511,15 @@
     <div class="shell split">
       <div class="split__body" data-reveal>
         <h2>Questions, parties, anything else.</h2>
-        <p>We read everything that comes through here, but the fastest answer is always a phone
-          call, especially during service.</p>
-
-        <!-- ====================================================================
-             FORM ENDPOINT: replace YOUR_FORM_ID below with the real Formspree
-             form ID (formspree.io, free tier, delivers to hotpotworld@gmail.com).
-             Until that is swapped in, this form will not deliver anything.
-             Netlify Forms is a drop in alternative if the site lands on Netlify:
-             add netlify netlify-honeypot="company" to the form tag and delete
-             the action attribute.
-             ==================================================================== -->
-        <form class="form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
-          <div class="form__row">
-            <div class="field">
-              <label for="name">Name <span class="form__req" aria-hidden="true">*</span></label>
-              <input id="name" name="name" type="text" autocomplete="name" required>
-            </div>
-            <div class="field">
-              <label for="phone">Phone <span class="form__req" aria-hidden="true">*</span></label>
-              <input id="phone" name="phone" type="tel" autocomplete="tel" required>
-            </div>
-          </div>
-          <div class="form__row">
-            <div class="field">
-              <label for="email">Email <span class="form__req" aria-hidden="true">*</span></label>
-              <input id="email" name="email" type="email" autocomplete="email" required>
-            </div>
-            <div class="field">
-              <label for="topic">What is this about?</label>
-              <select id="topic" name="topic">
-                <option>Large party</option>
-                <option>Question</option>
-                <option>Catering</option>
-                <option>Franchising</option>
-                <option>Feedback</option>
-                <option>Other</option>
-              </select>
-            </div>
-          </div>
-          <div class="field">
-            <label for="message">Message</label>
-            <textarea id="message" name="message"></textarea>
-          </div>
-          <!-- honeypot: real people never fill this in -->
-          <div class="hp" aria-hidden="true">
-            <label for="company">Company</label>
-            <input id="company" name="company" type="text" tabindex="-1" autocomplete="off">
-          </div>
-          <div>
-            <button class="btn btn--primary" type="submit">Send message</button>
-          </div>
-          <p class="form__note">We use what you send here only to get back to you. Nothing else.</p>
-        </form>
+        <p>Give us a call. It is the fastest way to reach us, and it is how we plan large
+          parties.</p>
+        <div class="btn-row">
+          <a class="btn btn--primary" href="tel:+12064293770">Call (206) 429-3770</a>
+        </div>
+        <!-- The contact form was removed 2026-09-28: it posted to a placeholder Formspree ID
+             and delivered nothing. To bring it back, restore the <form> from git history
+             (commit 519ce64) and put a real form ID in its action. The .form styles are
+             still in style.css. -->
       </div>
       <div class="split__media" data-reveal data-reveal-delay="1">
         <img src="assets/img/web/room-tables.jpg" alt="Guests seated along the conveyor belt in the Hot Pot World dining room" loading="lazy" width="800" height="600">
