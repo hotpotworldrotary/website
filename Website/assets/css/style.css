@@ -487,6 +487,15 @@ h3 > .vn { font-size: .82rem; }
 }
 .hero-prices li:last-child { border-bottom: 0; }
 .hero-prices b { font-weight: 800; font-size: 1.15em; color: #fff; white-space: nowrap; }
+.hero-prices__payg { flex-wrap: wrap; row-gap: 0; }
+.hero-prices__payg small span { white-space: nowrap; }
+.hero-prices__payg small {
+  flex-basis: 100%; margin-top: 0;
+  font-size: .86rem; font-weight: 500; color: var(--bone-dim); line-height: 1.7;
+}
+.dot { display: inline-block; width: .7em; height: .7em; border-radius: 50%; margin: 0 .3em 0 .55em; vertical-align: -.02em; }
+.dot--blue { background: #3B8FD9; } .dot--green { background: #45B36B; }
+.dot--red { background: #E0443E; } .dot--yellow { background: #F2C230; }
 /* Seniors & military decal: a round sticker, tilted like one stuck on the window.
    Sits on the hero panel's top right corner; inline in the menu section. */
 .decal {
