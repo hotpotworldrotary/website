@@ -478,6 +478,15 @@ h3 > .vn { font-size: .82rem; }
 }
 .hero .lede { max-width: 44ch; color: var(--bone); }
 .hero .lede b { color: var(--bone); }
+/* Three ways to eat, as a short price list in the hero panel. */
+.hero-prices { list-style: none; margin: 0 0 1.75rem; padding: 0; max-width: 34rem; }
+.hero-prices li {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 1.5rem;
+  padding-block: .55rem; border-bottom: 1px solid rgba(242,237,231,.18);
+  font-size: clamp(1.02rem, 1.6vw, 1.2rem); font-weight: 600; color: var(--bone);
+}
+.hero-prices li:last-child { border-bottom: 0; }
+.hero-prices b { font-weight: 800; font-size: 1.15em; color: #fff; white-space: nowrap; }
 /* Seniors & military decal: a round sticker, tilted like one stuck on the window.
    Sits on the hero panel's top right corner; inline in the menu section. */
 .decal {
@@ -497,7 +506,7 @@ h3 > .vn { font-size: .82rem; }
 .decal__small { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin-top: .3rem; }
 .hero__inner > .decal { position: absolute; left: min(760px, calc(100% - 6rem)); right: auto; }
 @media (max-width: 700px) {
-  .hero__inner > .decal { left: auto; right: 1.25rem; top: -5.25rem; width: 6.5rem; }
+  .hero__inner > .decal { left: auto; right: 1.75rem; top: -5.25rem; width: 6.5rem; }
   .hero__inner > .decal .decal__big { font-size: 1.45rem; }
   .hero__inner > .decal .decal__small { font-size: .6rem; }
 }
