@@ -1,15 +1,19 @@
 #!/usr/bin/env python3
 """Write the latest 4 and 5 star Google reviews into Website/index.html.
 
-Runs nightly from .github/workflows/reviews.yml. Reads the restaurant's own
-reviews through the Google Business Profile API (owner access), keeps the
-newest reviews rated 4 or 5 stars that have written text, and replaces the
-block between the reviews:start and reviews:end markers in index.html.
+Runs nightly from .github/workflows/reviews.yml. Reads the newest 4 and 5 star
+reviews from the review-card Worker, which remembers every review the Make
+scenario posts to Facebook (review-card/README.md). If Google Business Profile
+API secrets are set, reads Google directly instead; that API needs Google's
+approval, which the restaurant does not have yet. Keeps the newest reviews
+rated 4 or 5 stars that have written text, and replaces the block between the
+reviews:start and reviews:end markers in index.html.
 
 Standard library only. Exits non-zero on any API failure and leaves the page
 untouched, so a broken token fails the workflow instead of emptying the section.
 
 Environment:
+  REVIEWS_URL    the Worker's /reviews.json (default below)
   GBP_CLIENT_ID, GBP_CLIENT_SECRET, GBP_REFRESH_TOKEN   OAuth (connect_google.py sets these)
   GBP_LOCATION   accounts/<id>/locations/<id>  (optional; discovered and printed if unset)
 
@@ -34,16 +38,20 @@ INDEX = ROOT / "Website" / "index.html"
 START = "<!-- reviews:start -->"
 END = "<!-- reviews:end -->"
 
-SHOW = 4                 # the quote grid is two columns, so keep it even
+SHOW = 5                 # two columns; the first quote spans both (style.css .quote:first-child)
 MAX_CHARS = 180          # longer reviews are cut at a word boundary
 STARS = {"ONE": 1, "TWO": 2, "THREE": 3, "FOUR": 4, "FIVE": 5}
 MAPS_FALLBACK = "https://www.google.com/maps/search/?api=1&query=Hot+Pot+World+Rotary+Federal+Way+WA"
+REVIEWS_URL = "https://hotpotworld-review-card.anh-add.workers.dev/reviews.json"
 
 
 # ---------------------------------------------------------------- Google API
 
 def api(url, token=None, data=None):
-    headers = {"Authorization": f"Bearer {token}"} if token else {}
+    # Cloudflare refuses Python's default User-Agent (error 1010), so name ourselves.
+    headers = {"User-Agent": "hotpotworld-reviews/1.0"}
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
     body = urllib.parse.urlencode(data).encode() if data else None
     req = urllib.request.Request(url, data=body, headers=headers)
     try:
@@ -51,7 +59,7 @@ def api(url, token=None, data=None):
             return json.load(r)
     except urllib.error.HTTPError as e:
         detail = e.read().decode(errors="replace")[:500]
-        sys.exit(f"Google API {e.code} on {url.split('?')[0]}\n{detail}")
+        sys.exit(f"HTTP {e.code} on {url.split('?')[0]}\n{detail}")
 
 
 def access_token():
@@ -90,7 +98,7 @@ def fetch(token, location):
     meta = api(f"https://mybusinessbusinessinformation.googleapis.com/v1/locations/{loc_id}"
                "?readMask=metadata", token).get("metadata", {})
     reviews, page = [], None
-    for _ in range(4):  # 4 pages x 50 is far more than we need to find 4 good ones
+    for _ in range(4):  # 4 pages x 50 is far more than we need to find 5 good ones
         q = {"pageSize": 50, "orderBy": "updateTime desc"}
         if page:
             q["pageToken"] = page
@@ -161,13 +169,13 @@ def render(data):
             "        </blockquote>"
         )
     avg, total = data.get("averageRating"), data.get("totalReviewCount")
-    summary = (f"{avg:.1f} stars from {total:,} Google reviews."
-               if avg and total else "Read every review on Google.")
+    summary, link = ((f"{avg:.1f} stars from {total:,} Google reviews.", "See them on Google")
+                     if avg and total else ("", "Read every review on Google"))
     return (
         f"{START}\n"
         '      <div class="quotes" data-reveal>\n' + "\n".join(out) + "\n      </div>\n"
-        f'      <p class="quotes__more" data-reveal>{summary} '
-        f'<a href="{html.escape(maps)}" target="_blank" rel="noopener">See them on Google</a></p>\n'
+        f'      <p class="quotes__more" data-reveal>{summary + " " if summary else ""}'
+        f'<a href="{html.escape(maps)}" target="_blank" rel="noopener">{link}</a></p>\n'
         f"      {END}"
     )
 
@@ -180,6 +188,8 @@ def main():
 
     if args.fixture:
         data = json.loads(Path(args.fixture).read_text())
+    elif not os.environ.get("GBP_REFRESH_TOKEN"):
+        data = api(os.environ.get("REVIEWS_URL") or REVIEWS_URL)
     else:
         token = access_token()
         data = fetch(token, os.environ.get("GBP_LOCATION") or find_location(token))

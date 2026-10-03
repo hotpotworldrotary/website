@@ -844,7 +844,12 @@ h3 > .vn { font-size: .82rem; }
   margin-top: clamp(3rem, 6vw, 5rem);
   border-top: 1px solid var(--line);
 }
-@media (min-width: 760px) { .quotes { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 760px) {
+  .quotes { grid-template-columns: 1fr 1fr; }
+  /* An odd count (five reviews) would leave a gap, so the newest spans the row. */
+  .quote:first-child:nth-last-child(odd) { grid-column: 1 / -1; }
+  .quote:first-child:nth-last-child(odd) p { font-size: clamp(1.25rem, 2vw, 1.55rem); }
+}
 .quote {
   position: relative;
   margin: 0;

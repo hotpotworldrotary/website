@@ -3,5 +3,7 @@
   "main": "src/worker.js",
   "compatibility_date": "2026-10-01",
   "rules": [{ "type": "Data", "globs": ["**/*.ttf"], "fallthrough": true }],
+  // Newest 4 and 5 star reviews, for the website (key "latest").
+  "kv_namespaces": [{ "binding": "REVIEWS", "id": "2c3a2f6cfa0341ff9688d39a231e4fbe" }],
   "observability": { "enabled": true }
 }

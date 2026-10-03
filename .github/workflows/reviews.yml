@@ -1,5 +1,6 @@
 name: Refresh Google reviews
-# Nightly: pull the latest 4 and 5 star Google reviews into Website/index.html.
+# Nightly: pull the latest 4 and 5 star Google reviews into Website/index.html
+# (from the review-card Worker, or Google directly once the API is approved).
 # Commits only when the reviews changed, then starts the Pages deploy, since a
 # push made with GITHUB_TOKEN does not trigger pages.yml on its own.
 on:
@@ -23,12 +24,8 @@ jobs:
           GBP_CLIENT_SECRET: ${{ secrets.GBP_CLIENT_SECRET }}
           GBP_REFRESH_TOKEN: ${{ secrets.GBP_REFRESH_TOKEN }}
           GBP_LOCATION: ${{ vars.GBP_LOCATION }}
-        run: |
-          if [ -z "$GBP_REFRESH_TOKEN" ]; then
-            echo "Google is not connected yet (scripts/reviews/connect_google.py). Skipping."
-            exit 0
-          fi
-          python3 scripts/reviews/fetch_reviews.py
+        # Without Google API secrets the script reads the review-card Worker.
+        run: python3 scripts/reviews/fetch_reviews.py
       - name: Commit and deploy if changed
         env:
           GH_TOKEN: ${{ github.token }}
