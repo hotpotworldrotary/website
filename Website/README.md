@@ -174,3 +174,23 @@ already indexed will 404. On Netlify, `_redirects`:
 On Vercel the same thing goes in `vercel.json` under `redirects`. Confirm the
 real old paths in Search Console first; the list above is the likely shape, not
 a verified inventory.
+
+## Google reviews
+
+The quotes at the bottom of Our Story are the restaurant's latest 4 and 5 star
+Google reviews. `.github/workflows/reviews.yml` runs every night, calls
+`scripts/reviews/fetch_reviews.py`, and rewrites only the block between the
+`reviews:start` and `reviews:end` markers in `index.html`. It commits only when
+the reviews changed, then starts the Pages deploy.
+
+- Data comes from the Google Business Profile API with the owner's sign-in, not
+  the public Places API (that one returns 5 reviews, not newest first, and may
+  not be stored).
+- Secrets `GBP_CLIENT_ID`, `GBP_CLIENT_SECRET`, `GBP_REFRESH_TOKEN` and the
+  variable `GBP_LOCATION` live on the GitHub repo. `scripts/reviews/connect_google.py`
+  sets them. Run it again to reconnect if the job starts failing on a token error.
+- Until those secrets exist the job skips, and the four original quotes stay.
+- Names are shown as first name and last initial. Long reviews are cut at 180
+  characters. Both are constants at the top of the script.
+- Scheduled workflows in a public repo pause after 60 days with no commits. If
+  no new reviews land for two months, re-enable it under Actions.

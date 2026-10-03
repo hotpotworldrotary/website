@@ -1,0 +1,44 @@
+name: Refresh Google reviews
+# Nightly: pull the latest 4 and 5 star Google reviews into Website/index.html.
+# Commits only when the reviews changed, then starts the Pages deploy, since a
+# push made with GITHUB_TOKEN does not trigger pages.yml on its own.
+on:
+  schedule:
+    - cron: "17 11 * * *"   # 4:17 AM Pacific (PDT), before lunch opens
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: reviews
+  cancel-in-progress: false
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch reviews
+        env:
+          GBP_CLIENT_ID: ${{ secrets.GBP_CLIENT_ID }}
+          GBP_CLIENT_SECRET: ${{ secrets.GBP_CLIENT_SECRET }}
+          GBP_REFRESH_TOKEN: ${{ secrets.GBP_REFRESH_TOKEN }}
+          GBP_LOCATION: ${{ vars.GBP_LOCATION }}
+        run: |
+          if [ -z "$GBP_REFRESH_TOKEN" ]; then
+            echo "Google is not connected yet (scripts/reviews/connect_google.py). Skipping."
+            exit 0
+          fi
+          python3 scripts/reviews/fetch_reviews.py
+      - name: Commit and deploy if changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet -- Website/index.html; then
+            echo "No new reviews."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898333+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Refresh Google reviews" -- Website/index.html
+          git push
+          gh workflow run pages.yml --ref main

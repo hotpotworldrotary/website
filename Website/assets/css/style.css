@@ -863,12 +863,24 @@ h3 > .vn { font-size: .82rem; }
 }
 .quote p {
   margin: 0;
-  font-size: clamp(1.2rem, 1.9vw, 1.55rem);
+  font-size: clamp(1.1rem, 1.6vw, 1.3rem);
   font-weight: 600;
   line-height: 1.35;
   letter-spacing: -.012em;
   text-wrap: pretty;
 }
+.quote__by {
+  margin-top: .9rem;
+  font-size: .95rem;
+  color: var(--bone-dim);
+}
+.quote__stars { color: var(--red-ink); letter-spacing: .08em; margin-right: .35rem; }
+.quotes__more {
+  margin: 1.5rem 0 0;
+  font-size: .95rem;
+  color: var(--bone-dim);
+}
+.quotes__more a { font-weight: 600; }
 
 /* --- info panels -------------------------------------------------------- */
 .panels { display: grid; gap: 1rem; grid-template-columns: 1fr; }
